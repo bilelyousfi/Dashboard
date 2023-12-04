@@ -1,3 +1,4 @@
+import 'package:dashboard/View/User/profileContent.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,9 +26,7 @@ class ProfileScreen extends StatelessWidget {
               Expanded(child: DrawerMenu(),),
               Expanded(
                 flex: 5,
-                child: Center(
-                  child: Text('Hello Profile', style: TextStyle(fontSize: 24)),
-                ),
+                child: ProfileContents(),
               ),
             ],
         ),

@@ -1,6 +1,7 @@
 import 'package:dashboard/View/History/histoque.dart';
 import 'package:dashboard/View/Post/post.dart';
 import 'package:dashboard/View/Scan/scan.dart';
+import 'package:dashboard/View/User/loginscreen.dart';
 import 'package:dashboard/View/User/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => Controller(),)
         ],
-        child: DashBoardScreen(),
+        child: LoginScreen(),
       ),
       routes: {
         '/dashboard': (context) => DashBoardScreen(),
