@@ -12,16 +12,21 @@ class CustomAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context, listen: false);
 
     return Row(
       children: [
         if (!Responsive.isDesktop(context))
-          IconButton(
-            onPressed: context.read<Controller>().controlMenu,
-            icon: Icon(Icons.menu,color: textColor.withOpacity(0.5),),
+          Consumer<Controller>(
+            builder: (context, controller, child) {
+              return IconButton(
+                onPressed: controller.controlMenu,
+                icon: Icon(Icons.menu, color: textColor.withOpacity(0.5)),
+              );
+            },
           ),
         Expanded(child: SearchField()),
-        ProfileInfo()
+        ProfileInfo(),
       ],
     );
   }

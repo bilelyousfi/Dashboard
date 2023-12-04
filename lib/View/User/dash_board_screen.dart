@@ -14,10 +14,11 @@ class DashBoardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: bgColor,
       drawer: DrawerMenu(),
-      //key: context.read<Controller>().scaffoldKey,
+      key: context.read<Controller>().scaffoldKey,
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -16,7 +16,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: bgColor,
       drawer: DrawerMenu(),
-     // key: context.read<Controller>().scaffoldKey,
+      key: context.read<Controller>().scaffoldKey,
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
