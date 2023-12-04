@@ -9,7 +9,15 @@ import 'Controller/controller.dart';
 import 'View/User/dash_board_screen.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => Controller()),
+        // Ajoutez d'autres providers ici si nécessaire
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
