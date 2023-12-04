@@ -41,7 +41,7 @@ class DrawerMenu extends StatelessWidget {
 
           ),
           DrawerListTile(
-              title: 'Dash Board',
+              title: 'DashBoard',
               svgSrc: 'assets/icons/Dashboard.svg',
               tap: () {
                 Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -57,7 +57,7 @@ class DrawerMenu extends StatelessWidget {
             Navigator.of(context).pushReplacementNamed('/scan');
           }),
           DrawerListTile(
-              title: 'Historique',
+              title: 'History',
               svgSrc: 'assets/icons/Statistics.svg',
               tap: () {
                 Navigator.of(context).pushReplacementNamed('/history');
