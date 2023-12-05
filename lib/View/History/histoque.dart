@@ -4,6 +4,10 @@ import '../../constants/constants.dart';
 import '../../constants/responsive.dart';
 import '../drawer_menu.dart';
 
+// Model && Service
+import 'package:dashboard/View/History/api_service.dart';
+import 'package:dashboard/View/History/productModel.dart'; 
+
 class HistoriqueScreen extends StatefulWidget {
   const HistoriqueScreen({Key? key}) : super(key: key);
 
@@ -13,7 +17,10 @@ class HistoriqueScreen extends StatefulWidget {
 
 
 class _HistoriqueScreen extends State<HistoriqueScreen> {
+
+  final ApiService _apiService = ApiService();
   bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -331,6 +338,8 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
                             ]),
                       ],
                     )
+ //***********************************************  End of the table ******************************
+
                   ],
                 ),
               ),
