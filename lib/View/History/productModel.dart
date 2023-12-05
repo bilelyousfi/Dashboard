@@ -20,14 +20,15 @@ class ProductModel {
 
   // Deserialization
   factory ProductModel.fromJson(Map<String, dynamic> json) {
-    return ProductModel(
-      name: json['name'],
-      description: json['description'],
-      code: json['code'],
-      carbonFootPrint: json['carbonFootPrint'],
-      waterConsumption: json['waterConsumption'],
-      recyclability: json['recyclability'],
-    );
-  }
+  return ProductModel(
+    name: json['name'],
+    description: json['description'],
+    code: json['code'],
+    carbonFootPrint: json['carbonFootPrint'],
+    waterConsumption: json['waterConsumption'],
+    recyclability: json['recyclability'],
+  );
+}
+
     
 }

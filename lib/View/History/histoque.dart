@@ -294,50 +294,48 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
 
 
   // *****************************************  Products Table ********************************
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        DataTable(
-                            headingRowColor: MaterialStateProperty.resolveWith(
-                                (states) => Colors.grey.shade200),
-                            columns: [
-                              DataColumn(label: Text("ID")),
-                              DataColumn(label: Text("Product Name")),
-                              DataColumn(label: Text("Creation Date")),
-                              DataColumn(label: Text("Description")),
-                              DataColumn(label: Text("Code")),
-                            ],
-                            rows: [
-                              DataRow(cells: [
-                                DataCell(Text("0")),
-                                DataCell(
-                                    Text("How to build a Flutter Web App")),
-                                DataCell(Text("${DateTime.now()}")),
-                                DataCell(Text("2.3K Views")),
-                                DataCell(Text("102Comments")),
-                              ]),
+                  Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          FutureBuilder<List<ProductModel>>(
+            future: _apiService.getAll(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Erreur: ${snapshot.error}');
+              } else {
+                List<ProductModel> products = snapshot.data!;
 
-                              DataRow(cells: [
-                                DataCell(Text("1")),
-                                DataCell(
-                                    Text("How to build a Flutter Mobile App")),
-                                DataCell(Text("${DateTime.now()}")),
-                                DataCell(Text("21.3K Views")),
-                                DataCell(Text("1020Comments")),
-                              ]),
-
-                              DataRow(cells: [
-                                DataCell(Text("2")),
-                                DataCell(
-                                    Text("Flutter for your first project")),
-                                DataCell(Text("${DateTime.now()}")),
-                                DataCell(Text("2.3M Views")),
-                                DataCell(Text("10K Comments")),
-                              ]),
-
-                            ]),
+                return DataTable(
+                  headingRowColor: MaterialStateProperty.resolveWith(
+                      (states) => Colors.grey.shade200),
+                  columns: [
+                    DataColumn(label: Text("Product Name")),
+                    DataColumn(label: Text("Description")),
+                    DataColumn(label: Text("Code")),
+                    DataColumn(label: Text("CarbonFootPrint")),
+                    DataColumn(label: Text("Water Consumption")),
+                    DataColumn(label: Text("Recyclability")),
+                  ],
+                  rows: products.map((product) {
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(product.name)),
+                        DataCell(Text(product.description)),
+                        DataCell(Text(product.code)),
+                        DataCell(Text(product.carbonFootPrint)),
+                        DataCell(Text(product.waterConsumption)),
+                        DataCell(Text(product.recyclability)),
                       ],
-                    )
+                    );
+                  }).toList(),
+                );
+              }
+            },
+          ),
+        ],
+      ),
  //***********************************************  End of the table ******************************
 
                   ],
