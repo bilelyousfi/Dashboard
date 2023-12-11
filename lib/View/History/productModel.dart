@@ -1,6 +1,7 @@
 class ProductModel {
 
   // Attributs
+  final String? id;  // Rendre l'ID facultatif
   final String name;
   final String description;
   final String code;
@@ -10,6 +11,7 @@ class ProductModel {
   
   // Constructor
   ProductModel({
+    this.id,  // Rendre l'ID facultatif
     required this.name,
     required this.description,
     required this.code,
@@ -21,6 +23,7 @@ class ProductModel {
   // Deserialization
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
+      id: json['_id'],
       name: json['name'],
       description: json['description'],
       code: json['code'],

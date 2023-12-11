@@ -45,7 +45,7 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildDashboardCard(Icons.article, "Total Products", "6 Products"),
-                  _buildDashboardCard(Icons.comment, "Total Purchases", "+32 Purchases", color: Colors.red),
+                  _buildDashboardCard(Icons.article, "Total Purchases", "+32 Purchases", color: Colors.red),
                   _buildDashboardCard(Icons.people, "Clients", "3.2M Clients", color: Colors.amber),
                   _buildDashboardCard(Icons.monetization_on_outlined, "Revenue", "2.300 DT", color: Colors.green),
                 ],
@@ -180,6 +180,7 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
             headingRowColor: MaterialStateProperty.resolveWith((states) => Colors.grey.shade200),
             dataRowHeight: 80.0,
             columns: [
+              DataColumn(label: Text("ID")),
               DataColumn(label: Text("Product Name")),
               DataColumn(label: Text("Description")),
               DataColumn(label: Text("Code")),
@@ -192,6 +193,7 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
             rows: _products.map((product) {
               return DataRow(
                 cells: [
+                  DataCell(Text(product.id!)),
                   DataCell(Text(product.name)),
                   DataCell(Text(product.description)),
                   DataCell(Text(product.code)),
