@@ -57,11 +57,14 @@ class DrawerMenu extends StatelessWidget {
             Navigator.of(context).pushReplacementNamed('/scan');
           }),
           DrawerListTile(
-              title: 'History',
-              svgSrc: 'assets/icons/Statistics.svg',
-              tap: () {
-                Navigator.of(context).pushReplacementNamed('/history');
-              }),
+            title: 'History',
+            svgSrc: 'assets/icons/Statistics.svg',
+            tap: () {
+            
+            Navigator.of(context).pushReplacementNamed('/history'); // Navigue vers la page Historique
+            },
+          ),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: appPadding * 2),
             child: Divider(
