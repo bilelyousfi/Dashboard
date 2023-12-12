@@ -16,15 +16,12 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
 
   final ApiService _apiService = ApiService();
 
+  // variable pour stocker le nombre total de produits
+  int _totalProducts = 0;
+
   // pour le formulaire
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // Controllers to use
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _codeController = TextEditingController();
-  final TextEditingController _carbonFootPrintController = TextEditingController();
-  final TextEditingController _waterConsumptionController = TextEditingController();
-  final TextEditingController _recyclabilityController = TextEditingController();
 
   final TextEditingController _searchController = TextEditingController();
 
@@ -60,7 +57,7 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildDashboardCard(Icons.article, "Total Products", "6 Products"),
+                  _buildDashboardCard(Icons.article, "Total Products", "$_totalProducts Products"),
                   _buildDashboardCard(Icons.article, "Total Purchases", "+32 Purchases", color: Colors.red),
                   _buildDashboardCard(Icons.people, "Clients", "3.2M Clients", color: Colors.amber),
                   _buildDashboardCard(Icons.monetization_on_outlined, "Revenue", "2.300 DT", color: Colors.green),
@@ -219,6 +216,7 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
         } else {
           // Mettez à jour votre FutureBuilder pour utiliser la liste des produits stockée dans l'état local 
           _products = snapshot.data!;
+          _totalProducts = _products.length; // Mettez à jour _totalProducts
           //List<ProductModel> products = snapshot.data!;
 
           return DataTable(
@@ -238,6 +236,16 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
             rows: _products.map((product) {
             //rows: _filteredProducts.map((product) {
               return DataRow(
+                color: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                    // Si la souris survole la ligne, retournez une couleur différente
+                    if (states.contains(MaterialState.hovered)) {
+                      return Colors.lightBlue.withOpacity(0.3);
+                    }
+                    // Sinon, retournez null pour utiliser la couleur par défaut
+                  return null;
+                  },
+                ),
                 cells: [
                   DataCell(Text(product.id!)),
                   DataCell(Text(product.name)),
@@ -415,12 +423,12 @@ void _showEditProductDialog(BuildContext context, ProductModel product) {
     context: context,
     builder: (context) {
       // Utiliser les contrôleurs et les valeurs par défaut pour pré-remplir le formulaire
-      _nameController.text = product.name;
-      _descriptionController.text = product.description;
-      _codeController.text = product.code;
-      _carbonFootPrintController.text = product.carbonFootPrint;
-      _waterConsumptionController.text = product.waterConsumption;
-      _recyclabilityController.text = product.recyclability;
+    TextEditingController _nameController = TextEditingController(text: product.name);
+    TextEditingController _descriptionController = TextEditingController(text: product.description);
+    TextEditingController _codeController = TextEditingController(text: product.code);
+    TextEditingController _carbonFootPrintController = TextEditingController(text: product.carbonFootPrint);
+    TextEditingController _waterConsumptionController = TextEditingController(text: product.waterConsumption);
+    TextEditingController _recyclabilityController = TextEditingController(text: product.recyclability);
 
       return AlertDialog(
         title: Text('Edit Product'),
