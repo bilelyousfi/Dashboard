@@ -18,14 +18,30 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
 
   // pour le formulaire
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // Controllers to use
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _carbonFootPrintController = TextEditingController();
   final TextEditingController _waterConsumptionController = TextEditingController();
   final TextEditingController _recyclabilityController = TextEditingController();
+
+  final TextEditingController _searchController = TextEditingController();
+
   // variable d'etat pour stocker la liste des produits dans votre classe d'etat
   List<ProductModel> _products = [];
+  //List<ProductModel> _filteredProducts = [];
+
+  //  @override
+  //  void initState() {
+  //   super.initState();
+  //   _apiService.getAll().then((products) {
+  //     setState(() {
+  //       _products = products;
+  //       _filteredProducts = List.from(_products);
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -127,15 +143,20 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
         Container(
           width: 300.0,
           child: TextField(
-            decoration: InputDecoration(
-              hintText: "Type Product Name",
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black26),
-              ),
-            ),
+          controller: _searchController,
+          onChanged: (value) {
+            //_updateProductList();
+          },
+          decoration: InputDecoration(
+          hintText: "Type Product Name",
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black26),
+          ),
+          ),
           ),
         ),
+
         Row(
           children: [
             DropdownButton(
@@ -162,6 +183,30 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
       ],
     );
   }
+
+
+//   void _updateProductList() {
+//   String searchTerm = _searchController.text.toLowerCase();
+
+//   if (searchTerm.isEmpty) {
+//     setState(() {
+//       //_filteredProducts = List.from(_products);
+//       _apiService.getAll();
+//     });
+//   } else {
+//     List<ProductModel> filteredProducts = _products
+//         .where((product) =>
+//             product.name.toLowerCase().contains(searchTerm))
+//         .toList();
+
+//     setState(() {
+//       _filteredProducts = filteredProducts;
+//     });
+//   }
+// }
+
+
+// ****************************************************************************************
 
   Widget _buildProductsTable() {
     return FutureBuilder<List<ProductModel>>(
@@ -191,6 +236,7 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
             ],
             //rows: products.map((product) {
             rows: _products.map((product) {
+            //rows: _filteredProducts.map((product) {
               return DataRow(
                 cells: [
                   DataCell(Text(product.id!)),
@@ -207,12 +253,14 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
                           icon: Icon(Icons.edit, color: Colors.yellow),
                           onPressed: () {
                             // Action when Edit button is pressed
+                            _showEditProductDialog(context, product);
                           },
                         ),
                         IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
                             // Action when Delete button is pressed
+                            _showDeleteConfirmationDialog(context, product);
                           },
                         ),
                       ],
@@ -228,11 +276,154 @@ class _HistoriqueScreen extends State<HistoriqueScreen> {
   }
 
 void _showAddProductDialog(BuildContext context) {
+  // Créer de nouveaux contrôleurs pour chaque champ
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
+  TextEditingController carbonFootPrintController = TextEditingController();
+  TextEditingController waterConsumptionController = TextEditingController();
+  TextEditingController recyclabilityController = TextEditingController();
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         title: Text('Add Product'),
+        content: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: 'Product Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a product name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: descriptionController,
+                decoration: InputDecoration(labelText: 'Description'),
+                validator: (value) {
+                  // Validation logique pour la description
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a Description';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: codeController,
+                decoration: InputDecoration(labelText: 'Code'),
+                validator: (value) {
+                  // Validation logique pour le code
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a Code';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: carbonFootPrintController,
+                decoration: InputDecoration(labelText: 'Carbon FootPrint'),
+                validator: (value) {
+                  // Validation logique pour l'empreinte carbone
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Carbon FootPrint';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: waterConsumptionController,
+                decoration: InputDecoration(labelText: 'Water Consumption'),
+                validator: (value) {
+                  // Validation logique pour la consommation d'eau
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Water Consumption';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: recyclabilityController,
+                decoration: InputDecoration(labelText: 'Recyclability'),
+                validator: (value) {
+                  // Validation logique pour la recyclabilité
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Recyclability';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                try {
+                  await _apiService.addProduct(
+                    ProductModel(
+                      name: nameController.text,
+                      description: descriptionController.text,
+                      code: codeController.text,
+                      carbonFootPrint: carbonFootPrintController.text,
+                      waterConsumption: waterConsumptionController.text,
+                      recyclability: recyclabilityController.text,
+                    ),
+                  );
+
+                  // Mise à jour de l'état local ici
+                  setState(() {
+                    // Vous pouvez mettre à jour d'autres états si nécessaire
+                  });
+
+                  // Réinitialiser les contrôleurs
+                  nameController.clear();
+                  descriptionController.clear();
+                  codeController.clear();
+                  carbonFootPrintController.clear();
+                  waterConsumptionController.clear();
+                  recyclabilityController.clear();
+
+                  Navigator.pop(context);
+                } catch (e) {
+                  print('Error adding product: $e');
+                }
+              }
+            },
+            child: Text('Add'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showEditProductDialog(BuildContext context, ProductModel product) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      // Utiliser les contrôleurs et les valeurs par défaut pour pré-remplir le formulaire
+      _nameController.text = product.name;
+      _descriptionController.text = product.description;
+      _codeController.text = product.code;
+      _carbonFootPrintController.text = product.carbonFootPrint;
+      _waterConsumptionController.text = product.waterConsumption;
+      _recyclabilityController.text = product.recyclability;
+
+      return AlertDialog(
+        title: Text('Edit Product'),
         content: Form(
           key: _formKey,
           child: Column(
@@ -311,7 +502,9 @@ void _showAddProductDialog(BuildContext context) {
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 try {
-                  await _apiService.addProduct(
+                  // Utiliser _apiService.updateProduct
+                  await _apiService.updateProduct(
+                    product.id!,  // Utiliser l'ID existant
                     ProductModel(
                       name: _nameController.text,
                       description: _descriptionController.text,
@@ -337,11 +530,11 @@ void _showAddProductDialog(BuildContext context) {
 
                   Navigator.pop(context);
                 } catch (e) {
-                  print('Error adding product: $e');
+                  print('Error updating product: $e');
                 }
               }
             },
-            child: Text('Add'),
+            child: Text('Update'),
           ),
           TextButton(
             onPressed: () {
@@ -355,5 +548,42 @@ void _showAddProductDialog(BuildContext context) {
   );
 }
 
+void _showDeleteConfirmationDialog(BuildContext context, ProductModel product) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Confirm Deletion'),
+        content: Text('Are you sure you want to delete this product?'),
+        actions: [
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                // Utilisez _apiService.deleteProduct pour supprimer le produit
+                await _apiService.deleteProduct(product.id!);
+
+                // Mise à jour de l'état local ici
+                setState(() {
+                  // Vous pouvez mettre à jour d'autres états si nécessaire
+                });
+
+                Navigator.pop(context); // Fermer la boîte de dialogue de confirmation
+              } catch (e) {
+                print('Error deleting product: $e');
+              }
+            },
+            child: Text('Delete'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Fermer la boîte de dialogue de confirmation
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 }
