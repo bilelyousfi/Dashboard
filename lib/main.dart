@@ -2,13 +2,25 @@ import 'package:dashboard/View/History/histoque.dart';
 import 'package:dashboard/View/Post/post.dart';
 import 'package:dashboard/View/Scan/scan.dart';
 import 'package:dashboard/View/User/profile.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'Controller/controller.dart';
 import 'View/User/dash_board_screen.dart';
+import 'dio_helper.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  DioHelper.init(
+      _scaffoldKey
+  );
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [
