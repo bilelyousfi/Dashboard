@@ -1,6 +1,7 @@
 import 'package:dashboard/View/History/history.dart';
 import 'package:dashboard/View/History/api_service.dart'; // Assurez-vous d'importer correctement votre service
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class HistoriqueScreen extends StatefulWidget {
   @override
@@ -14,11 +15,26 @@ class _HistoriqueScreenState extends State<HistoriqueScreen> {
   List<History> _histories = [];
   int _totalHistories = 0;
 
+  Map<dynamic, dynamic> _stats = {};
+
+
   @override
   void initState() {
     super.initState();
     _loadHistoryData();
+    _loadHistoryStats();
   }
+
+  Future<void> _loadHistoryStats() async {
+    try {
+      final stats = await _apiService.getHistoryStats();
+      setState(() {
+        _stats = stats;
+      });
+    } catch (e) {
+      print('Error loading history stats: $e');
+    }
+}
 
   Future<void> _loadHistoryData() async {
     try {
@@ -33,7 +49,6 @@ class _HistoriqueScreenState extends State<HistoriqueScreen> {
     }
   }
   
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +59,125 @@ class _HistoriqueScreenState extends State<HistoriqueScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Vue d\'ensemble des historiques
             _buildOverviewSection(),
+
+            // Statistiques:
+            _buildStatisticsSection(),
+            
           ],
+        ),
+      ),
+    );
+  }
+
+
+ Widget _buildStatisticsSection() {
+  return Card(
+    margin: EdgeInsets.all(16.0),
+    elevation: 4.0,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Statistiques',
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildDashboardCard(
+                Icons.co2,
+                "Total Emissions",
+                _stats['totalEmissions'].toString(),
+                color: Colors.red,
+              ),
+              _buildDashboardCard(
+                Icons.water,
+                "Total Water Consumption",
+                _stats['totalWaterConsumption'].toString(),
+                color: Colors.lightBlue,
+              ),
+              _buildDashboardCard(
+                Icons.recycling,
+                "Total Recyclability",
+                _stats['totalRecyclability'].toString(),
+                color: Colors.green,
+              ),
+            ],
+          ),
+          SizedBox(height: 20.0,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildDashboardCard(
+                Icons.co2,
+                "Average Emissions",
+                _stats['averageEmissions'].toString(),
+                color: Colors.red,
+              ),
+              _buildDashboardCard(
+                Icons.water,
+                "Average Water Consumption",
+                _stats['averageWaterConsumption'].toString(),
+                color: Colors.lightBlue,
+              ),
+              _buildDashboardCard(
+                Icons.recycling,
+                "Average Recyclability",
+                _stats['averageRecyclability'].toString(),
+                color: Colors.green,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+  Widget _buildDashboardCard(IconData icon, String title, String value, {Color? color}) {
+    return Expanded(
+      child: Card(
+        elevation: 4.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: 26.0,
+                    color: color,
+                  ),
+                  SizedBox(width: 15.0),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -174,4 +306,6 @@ class _HistoriqueScreenState extends State<HistoriqueScreen> {
     });
     _loadHistoryData();
   }
+
+  // _buildDashboardCard(Icons.article, "Total Products", " Products"),
 }

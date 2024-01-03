@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'productModel.dart';
-import 'product.dart';
+
 import 'history.dart';
 
 class ApiService {
 
-  final String _baseUrl = "http://192.168.1.151:3000";
+  //final String _baseUrl = "http://192.168.1.151:3000";
+  final String _baseUrl = "http://192.168.1.12:3000";
 
   // GET ALL PRODUCTS
   Future<List<ProductModel>> getAll() async {
@@ -58,24 +59,6 @@ class ApiService {
 
 // services pour le développement dashboard admin concernant les produits enregistrés dans les historiques
 
-// Future<Map<String, dynamic>> getAllHistory(String searchQuery, String sortField, int page, int limit) async {
-//     final response = await http.get(
-//       Uri.parse('$_baseUrl/historique/all?searchQuery=$searchQuery&sortField=$sortField&page=$page&limit=$limit'),
-//     );
-
-//     if (response.statusCode == 200) {
-//       final Map<String, dynamic> data = json.decode(response.body);
-//       final List<dynamic> historyList = data['histories'];
-//       final int totalHistories = data['totalHistories'];
-
-//       return {
-//         'histories': historyList.map((json) => History.fromJson(json)).toList(),
-//         'totalHistories': totalHistories,
-//       };
-//     } else {
-//       throw Exception('Failed to load history');
-//     }
-//   }
 // Get all History and pagination
 Future<Map<String, dynamic>> getAllHistory(int page, int limit) async {
     final response = await http.get(
@@ -125,20 +108,63 @@ Future<Map<String, dynamic>> getAllHistory(int page, int limit) async {
     }
   }
 
-
-
   // Get history statistics
-  Future<Map<String, dynamic>> getHistoryStats() async {
+  // Future<Product> getHistoryStats() async {
+  //   final response = await http.get(Uri.parse('$_baseUrl/historique/stats'));
+  //   if (response.statusCode == 200) {
+  //     final Map<String, dynamic> data = json.decode(response.body);
+  //     return Product.fromJson(data['stats']);
+  //   } else {
+  //     throw Exception('Failed to load history stats');
+  //   }
+  // }
 
+
+  Future<Map<String, dynamic>> getHistoryStats() async {
+  try {
     final response = await http.get(Uri.parse('$_baseUrl/historique/stats'));
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load history statistics');
-    }
-  }
+      final List<dynamic> statsList = json.decode(response.body)['stats'];
 
+      if (statsList.isNotEmpty) {
+        final Map<String, dynamic> stats = statsList.first;
+        return {
+          'totalEmissions': stats['totalEmissions'] ?? 0.0,
+          'totalWaterConsumption': stats['totalWaterConsumption'] ?? 0.0,
+          'totalRecyclability': stats['totalRecyclability'] ?? 0.0,
+          'averageEmissions': stats['averageEmissions'] ?? 0.0,
+          'averageWaterConsumption': stats['averageWaterConsumption'] ?? 0.0,
+          'averageRecyclability': stats['averageRecyclability'] ?? 0.0,
+        };
+      } else {
+        throw Exception('Stats list is empty');
+      }
+    } else {
+      throw Exception('Failed to load history stats');
+    }
+  } catch (e) {
+    throw Exception('Failed to load history stats: $e');
+  }
+}
+
+// Future<Map<String, dynamic>> getHistoryStats() async {
+//   final response = await http.get(Uri.parse('$_baseUrl/historique/stats'));
+
+//   if (response.statusCode == 200) {
+//     final data = jsonDecode(response.body);
+
+//     if (data['stats'] is Map<String, dynamic>) {
+//       return data['stats'];
+//     } else {
+//       throw Exception('Invalid format for history stats');
+//     }
+//   } else {
+//     throw Exception('Failed to fetch history stats');
+//   }
+// }
+
+  
   // Get history analysis
   Future<Map<String, dynamic>> getHistoryAnalysis(String type) async {
 
@@ -153,3 +179,23 @@ Future<Map<String, dynamic>> getAllHistory(int page, int limit) async {
 
 
 }
+
+
+// Future<Map<String, dynamic>> getAllHistory(String searchQuery, String sortField, int page, int limit) async {
+//     final response = await http.get(
+//       Uri.parse('$_baseUrl/historique/all?searchQuery=$searchQuery&sortField=$sortField&page=$page&limit=$limit'),
+//     );
+
+//     if (response.statusCode == 200) {
+//       final Map<String, dynamic> data = json.decode(response.body);
+//       final List<dynamic> historyList = data['histories'];
+//       final int totalHistories = data['totalHistories'];
+
+//       return {
+//         'histories': historyList.map((json) => History.fromJson(json)).toList(),
+//         'totalHistories': totalHistories,
+//       };
+//     } else {
+//       throw Exception('Failed to load history');
+//     }
+//   }
