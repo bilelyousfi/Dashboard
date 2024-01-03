@@ -1,4 +1,5 @@
 import 'package:dashboard/View/History/histoque.dart';
+import 'package:dashboard/View/Post/details_screen.dart';
 import 'package:dashboard/View/Post/post.dart';
 import 'package:dashboard/View/Scan/scan.dart';
 import 'package:dashboard/View/User/profile.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/scan': (context) => ScanScreen(),
         '/history': (context) => HistoriqueScreen(),
         '/profile': (context) => ProfileScreen(),
+        '/Details' :(context) => DetailsScreen()
       },
     );
   }

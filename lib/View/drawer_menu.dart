@@ -47,7 +47,7 @@ class DrawerMenu extends StatelessWidget {
                 Navigator.of(context).pushReplacementNamed('/dashboard');
               }),
           DrawerListTile(
-              title: 'Blog Post',
+              title: 'Post',
               svgSrc: 'assets/icons/BlogPost.svg',
               tap: () {
                 Navigator.of(context).pushReplacementNamed('/post');
