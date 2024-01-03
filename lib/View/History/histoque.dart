@@ -17,12 +17,15 @@ class _HistoriqueScreenState extends State<HistoriqueScreen> {
 
   Map<dynamic, dynamic> _stats = {};
 
+  Map<String, dynamic> _ecoFriendlyAnalysis = {};
+
 
   @override
   void initState() {
     super.initState();
     _loadHistoryData();
     _loadHistoryStats();
+    _loadEcoFriendlyAnalysis();
   }
 
   Future<void> _loadHistoryStats() async {
@@ -49,6 +52,18 @@ class _HistoriqueScreenState extends State<HistoriqueScreen> {
     }
   }
   
+  Future<void> _loadEcoFriendlyAnalysis() async {
+  try {
+    final ecoFriendlyAnalysis = await _apiService.getEcoFriendlyAnalysis();
+    
+    setState(() {
+      _ecoFriendlyAnalysis = ecoFriendlyAnalysis;
+    });
+  } catch (e) {
+    print('Error loading eco-friendly analysis: $e');
+  }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,11 +80,73 @@ class _HistoriqueScreenState extends State<HistoriqueScreen> {
             // Statistiques:
             _buildStatisticsSection(),
             
+            //Analyses
+            _buildAnalysisEcoFriendlySection(),
           ],
         ),
       ),
     );
   }
+
+Widget _buildAnalysisEcoFriendlySection() {
+  return Card(
+    margin: EdgeInsets.all(16.0),
+    elevation: 4.0,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Analyses',
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 16.0),
+          if (_ecoFriendlyAnalysis['ecoFriendlyProducts'] != null &&
+              _ecoFriendlyAnalysis['ecoFriendlyProducts'].isNotEmpty)
+            _buildEcoFriendlyTable(_ecoFriendlyAnalysis['ecoFriendlyProducts']),
+          // Add other widgets as needed
+        ],
+      ),
+    ),
+  );
+}
+
+  Widget _buildEcoFriendlyTable(List<dynamic> ecoFriendlyProducts) {
+  return DataTable(
+    columns: const <DataColumn>[
+      DataColumn(
+        label: Text(
+          'Name',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Category',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Eco Score',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    ],
+    rows: ecoFriendlyProducts
+        .map(
+          (product) => DataRow(
+            cells: <DataCell>[
+              DataCell(Text(product['name'] ?? '')),
+              DataCell(Text(product['category'] ?? '')),
+              DataCell(Text(product['ecoScore'].toString() ?? '')),
+            ],
+          ),
+        )
+        .toList(),
+  );
+}
 
 
  Widget _buildStatisticsSection() {

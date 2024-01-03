@@ -109,17 +109,6 @@ Future<Map<String, dynamic>> getAllHistory(int page, int limit) async {
   }
 
   // Get history statistics
-  // Future<Product> getHistoryStats() async {
-  //   final response = await http.get(Uri.parse('$_baseUrl/historique/stats'));
-  //   if (response.statusCode == 200) {
-  //     final Map<String, dynamic> data = json.decode(response.body);
-  //     return Product.fromJson(data['stats']);
-  //   } else {
-  //     throw Exception('Failed to load history stats');
-  //   }
-  // }
-
-
   Future<Map<String, dynamic>> getHistoryStats() async {
   try {
     final response = await http.get(Uri.parse('$_baseUrl/historique/stats'));
@@ -147,23 +136,6 @@ Future<Map<String, dynamic>> getAllHistory(int page, int limit) async {
     throw Exception('Failed to load history stats: $e');
   }
 }
-
-// Future<Map<String, dynamic>> getHistoryStats() async {
-//   final response = await http.get(Uri.parse('$_baseUrl/historique/stats'));
-
-//   if (response.statusCode == 200) {
-//     final data = jsonDecode(response.body);
-
-//     if (data['stats'] is Map<String, dynamic>) {
-//       return data['stats'];
-//     } else {
-//       throw Exception('Invalid format for history stats');
-//     }
-//   } else {
-//     throw Exception('Failed to fetch history stats');
-//   }
-// }
-
   
   // Get history analysis
   Future<Map<String, dynamic>> getHistoryAnalysis(String type) async {
@@ -177,6 +149,21 @@ Future<Map<String, dynamic>> getAllHistory(int page, int limit) async {
     }
   }
 
+  // Get the eco-friendly Product
+  Future<Map<String, dynamic>> getEcoFriendlyAnalysis() async {
+    try {
+      final response = await http.get(Uri.parse('$_baseUrl/historique/analysis/eco-friendly'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data['analysis'];
+      } else {
+        throw Exception('Failed to load eco-friendly analysis');
+      }
+    } catch (e) {
+      throw Exception('Failed to load eco-friendly analysis: $e');
+    }
+  }
 
 }
 
